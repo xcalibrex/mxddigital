@@ -4,6 +4,7 @@ import { Hero, HeroMedia } from "./Hero";
 import { Statement } from "./Statement";
 import { Services } from "./Services";
 import { Results } from "./Results";
+import { Work } from "./Work";
 import { Faq } from "./Faq";
 import { WizardSection } from "./Wizard";
 import { Footer } from "./Footer";
@@ -22,6 +23,7 @@ export function Landing({ initialTrade = 0, locked = false }: { initialTrade?: n
           <Statement />
           <Services />
           <Results />
+          <Work />
           <Faq />
           <WizardSection />
         </main>

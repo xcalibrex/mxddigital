@@ -6,18 +6,14 @@ export type Trade = {
   job: string;
   /** Form value, as in the Trade select and the lead payload. */
   single: string;
-  /** Alt text / label for the hero media. */
-  photo: string;
-  /** Optional hero photo in /public. Leave null until the real shot exists. */
-  image: string | null;
 };
 
+// Roofers first: the default page opens on them.
 export const TRADES: Trade[] = [
-  { slug: "plumbers", trade: "Plumbers", job: "Blocked drains", single: "Plumbing", photo: "Plumber on the job", image: null },
-  { slug: "electricians", trade: "Electricians", job: "Switchboard upgrades", single: "Electrical", photo: "Electrician on the job", image: null },
-  { slug: "roofers", trade: "Roofers", job: "Roof restorations", single: "Roofing", photo: "Roofer on the job", image: null },
-  { slug: "builders", trade: "Builders", job: "Extensions", single: "Building", photo: "Builder on the job", image: null },
-  { slug: "landscapers", trade: "Landscapers", job: "Backyard makeovers", single: "Landscaping", photo: "Landscaper on the job", image: null },
+  { slug: "roofers", trade: "Roofers", job: "Re-roof installations", single: "Roofing" },
+  { slug: "plumbers", trade: "Plumbers", job: "Bathroom renovations", single: "Plumbing" },
+  { slug: "builders", trade: "Builders", job: "Kitchen renovations", single: "Building" },
+  { slug: "landscapers", trade: "Landscapers", job: "Backyard makeovers", single: "Landscaping" },
 ];
 
 export const OTHER_TRADE = "Other trade";

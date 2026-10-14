@@ -11,7 +11,7 @@ const config: NextConfig = {
       beforeFiles: [
         {
           source: "/",
-          has: [{ type: "query", key: "trade", value: "(?<trade>plumbers?|electricians?|roofers?|builders?|landscapers?)" }],
+          has: [{ type: "query", key: "trade", value: "(?<trade>roofers?|plumbers?|builders?|landscapers?)" }],
           destination: "/t/:trade",
         },
       ],

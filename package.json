@@ -6,11 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "promo:audio": "node --experimental-strip-types --no-warnings scripts/build-promo-audio.mjs"
   },
   "packageManager": "pnpm@9.12.0",
   "dependencies": {
-    "@supabase/supabase-js": "2.117.3",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { PlusIcon } from "./Icons";
 
-// TODO(launch): confirm fee inclusions, turnaround, contract and ownership answers.
 export const FAQS = [
   {
     q: "How does revenue share work?",
@@ -15,11 +14,14 @@ export const FAQS = [
   },
   {
     q: "What does the monthly website fee cover?",
-    a: "Hosting, security and ongoing updates, so your site keeps working while you are on the tools. [Confirm full inclusions.]",
+    a: "Hosting, security and content updates, so your site keeps working while you're on the tools. Bigger changes are quoted separately.",
   },
-  { q: "How fast can my website go live?", a: "[Your turnaround time] from when we have your details and photos." },
-  { q: "Am I locked into a contract?", a: "[Your contract terms.]" },
-  { q: "Do I own my website?", a: "[Your ownership terms.]" },
+  { q: "How fast can my website go live?", a: "72 hours from when we have your details and photos." },
+  { q: "Am I locked into a contract?", a: "No. There are no lock-in contracts. You stay because it's working." },
+  {
+    q: "Do I own my website?",
+    a: "Your domain, content and photos are always yours. Your site runs on our hosting while you're with us, which covers security and updates. If you ever leave, we'll move it to your own hosting for a one-off $200 migration fee.",
+  },
 ];
 
 export function Faq() {

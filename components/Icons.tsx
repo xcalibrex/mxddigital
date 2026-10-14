@@ -19,15 +19,6 @@ export function MegaphoneIcon() {
   );
 }
 
-export function CameraIcon() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5C5850" strokeWidth="1.5" strokeLinecap="square" aria-hidden="true">
-      <path d="M3 7h4l2-3h6l2 3h4v13H3z" />
-      <circle cx="12" cy="13" r="4" />
-    </svg>
-  );
-}
-
 export function PlusIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square">
