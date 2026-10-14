@@ -7,7 +7,7 @@ const display = Unbounded({ subsets: ["latin"], weight: ["400"], variable: "--fo
 const promo = Bebas_Neue({ subsets: ["latin"], weight: "400", variable: "--font-promo", display: "swap" });
 const body = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body", display: "swap" });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mxddigital.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.mxddigital.com";
 const description = "Ads that pay for themselves. Websites that convert. Digital marketing for Australian trade businesses.";
 
 export const metadata: Metadata = {
