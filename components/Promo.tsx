@@ -128,7 +128,7 @@ export function Promo() {
       <svg className="promo-defs" aria-hidden="true" width="0" height="0">
         <filter id="promo-warp" x="-10%" y="-20%" width="120%" height="140%">
           <feTurbulence type="fractalNoise" baseFrequency="0.004 0.09" numOctaves="1" seed="3" />
-          <feDisplacementMap in="SourceGraphic" scale={onDash ? flood * flood * 46 : 5} xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap in="SourceGraphic" scale={flood * flood * 46} xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
 

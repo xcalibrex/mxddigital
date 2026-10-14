@@ -162,7 +162,7 @@ a:hover { color: var(--orange); }
 }
 
 .pt { display: flex; align-items: center; justify-content: center; padding: 0 6cqw; background: #050505; text-align: center; }
-.pt-line { display: block; font-family: var(--font-promo), Impact, sans-serif; font-size: min(15cqw, 30cqh); line-height: 0.88; text-transform: uppercase; color: var(--bone); transform: scaleY(1.12); filter: url(#promo-warp); text-shadow: -0.04em 0 rgba(255, 153, 28, 0.55), 0.03em 0 rgba(255, 255, 255, 0.25); }
+.pt-line { display: block; font-family: var(--font-promo), Impact, sans-serif; font-size: min(15cqw, 30cqh); line-height: 0.88; text-transform: uppercase; color: var(--bone); transform: scaleY(1.12); text-shadow: -0.04em 0 rgba(255, 153, 28, 0.55), 0.03em 0 rgba(255, 255, 255, 0.25); }
 .pt-cue { font-size: min(14cqw, 28cqh); }
 /* a single accented word ("$100K") lands as the big hit */
 .pt-hit { font-size: min(34cqw, 62cqh); }
