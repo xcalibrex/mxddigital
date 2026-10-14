@@ -63,7 +63,7 @@ export function Services() {
 
           <div className="engine engine-dark reveal">
             <span className="engine-kicker">Built to convert</span>
-            <span className="engine-word display">Websites</span>
+            <span className="engine-word display">Website</span>
             <div role="group" aria-label="Website package" className="tabs">
               {(["simple", "premium"] as const).map((k) => (
                 <button
