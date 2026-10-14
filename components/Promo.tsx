@@ -29,82 +29,69 @@ function accented(text: string): ReactNode[] {
 
 /**
  * Hero promo: jobs dashboard where lead and job-won notifications (the voice lines) arrive
- * faster and faster while revenue climbs, a flip on its axis, then the pitch as kinetic text. One clock drives everything: the audio's
- * currentTime when sound is on, otherwise a frame clock that only runs while on screen.
+ * faster and faster while revenue climbs, a flip on its axis, then the pitch as kinetic text.
+ * Browsers block autoplay with sound, so it waits on a play button and then runs once with
+ * the voiceover, the audio's currentTime driving every frame. It ends on the CTA.
  */
+type Phase = "idle" | "playing" | "ended";
+/** Hold point after playback: the end card and CTA are up and the music has faded. */
+const HOLD_AT = END_CARD + 3;
+
 export function Promo() {
   const { state } = useLanding();
-  const rootRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [t, setT] = useState(0);
-  const [still, setStill] = useState(false);
-  const [sound, setSound] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [clock, setClock] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const t = phase === "idle" ? 0 : phase === "ended" ? HOLD_AT : clock;
 
-  // Trade is pinned per loop so the dashboard doesn't change mid-sequence.
-  const tradeAtLoop = useRef(state.i);
-  const lastT = useRef(0);
-  if (t < lastT.current) tradeAtLoop.current = state.i;
-  lastT.current = t;
-  const trade = TRADES[tradeAtLoop.current];
+  // Trade is pinned when playback starts so the dashboard doesn't change mid-sequence.
+  const [tradeIdx, setTradeIdx] = useState(state.i);
+  const trade = TRADES[phase === "idle" ? state.i : tradeIdx];
   const jobs = JOBS[trade.slug];
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setStill(true);
-      setT(COUNT.end + 0.1);
-      return;
-    }
+    if (phase !== "playing") return;
     let raf = 0;
-    let visible = false;
-    let clock = 0;
-    let prev = 0;
+    let fallback = 0;
+    let prev = performance.now();
     const frame = (now: number) => {
       const audio = audioRef.current;
-      if (audio && !audio.paused) clock = audio.currentTime;
-      else clock = (clock + Math.min(0.1, (now - prev) / 1000)) % LOOP;
+      // Audio drives the clock; if it couldn't start, a frame clock keeps the picture going.
+      if (audio && !audio.paused) fallback = audio.currentTime;
+      else fallback += Math.min(0.1, (now - prev) / 1000);
       prev = now;
-      setT(clock);
+      if (fallback >= HOLD_AT) {
+        audio?.pause();
+        setPhase("ended");
+        return;
+      }
+      setClock(fallback);
       raf = requestAnimationFrame(frame);
     };
-    const start = () => {
-      if (raf) return;
-      prev = performance.now();
-      raf = requestAnimationFrame(frame);
-    };
-    const stop = () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-    };
-    const io = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      if (visible && !document.hidden) start();
-      else stop();
-    });
-    const onVis = () => (visible && !document.hidden ? start() : stop());
-    if (rootRef.current) io.observe(rootRef.current);
-    document.addEventListener("visibilitychange", onVis);
-    return () => {
-      stop();
-      io.disconnect();
-      document.removeEventListener("visibilitychange", onVis);
-    };
-  }, []);
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [phase]);
 
-  const toggleSound = () => {
-    if (!PROMO_AUDIO) return;
-    if (!audioRef.current) {
-      audioRef.current = new Audio(PROMO_AUDIO);
-      audioRef.current.addEventListener("ended", () => setSound(false));
-    }
-    const a = audioRef.current;
-    if (sound) {
-      a.pause();
-      setSound(false);
-    } else {
+  useEffect(() => () => audioRef.current?.pause(), []);
+
+  const play = () => {
+    setTradeIdx(state.i);
+    setClock(0);
+    if (PROMO_AUDIO) {
+      audioRef.current ??= new Audio(PROMO_AUDIO);
+      const a = audioRef.current;
       a.currentTime = 0;
-      void a.play();
-      setSound(true);
+      a.muted = muted;
+      a.play().catch(() => {});
     }
+    setPhase("playing");
+  };
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    if (audioRef.current) audioRef.current.muted = next;
   };
 
   // ---- dashboard: notifications are the voice lines, so they share the voiceover schedule
@@ -129,12 +116,12 @@ export function Promo() {
   const out = clamp01((t - FLIP_START) / half);
   const into = clamp01((t - FLIP_START - half) / half);
   const onDash = t < FLIP_START + half;
-  const endCard = !still && t >= END_CARD;
+  const endCard = phase !== "idle" && t >= END_CARD;
   // The end card fades to black over the last stretch before the loop restarts.
   const endFade = 1 - clamp01((t - (LOOP - 1)) / 0.9);
 
   return (
-    <div className="promo" ref={rootRef}>
+    <div className="promo">
       <p className="sr-only">
         Demo: new leads arrive in the MXD jobs dashboard and booked revenue climbs past $100,000.
       </p>
@@ -232,9 +219,27 @@ export function Promo() {
         <span>See if you qualify</span>
       </a>
 
-      {PROMO_AUDIO && !still && (
-        <button type="button" className="promo-sound" onClick={toggleSound} aria-pressed={sound}>
-          {sound ? "Sound off" : "▶ Sound on"}
+      {phase === "idle" && (
+        <button type="button" className="promo-play" onClick={play}>
+          <span className="promo-play-ic" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" />
+            </svg>
+          </span>
+          <span className="promo-play-label">
+            Watch with sound
+            <small>0:{String(Math.round(HOLD_AT)).padStart(2, "0")}</small>
+          </span>
+        </button>
+      )}
+      {phase === "playing" && PROMO_AUDIO && (
+        <button type="button" className="promo-sound" onClick={toggleMute} aria-pressed={muted}>
+          {muted ? "Unmute" : "Mute"}
+        </button>
+      )}
+      {phase === "ended" && (
+        <button type="button" className="promo-sound" onClick={play}>
+          ↻ Watch again
         </button>
       )}
     </div>

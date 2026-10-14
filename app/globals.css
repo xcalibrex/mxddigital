@@ -110,7 +110,8 @@ a:hover { color: var(--orange); }
 
 /* hero media */
 .media-section { padding-top: clamp(72px, 9vw, 120px); padding-bottom: clamp(100px, 12vw, 170px); }
-.media { position: relative; height: clamp(320px, 46vw, 640px); border-radius: var(--r-lg); background: #151515; box-shadow: var(--glow); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+/* 2px orange gradient border (padding-box/border-box trick) and a glow around the whole block */
+.media { position: relative; height: clamp(320px, 46vw, 640px); border: 2px solid transparent; border-radius: var(--r-lg); background: linear-gradient(#0a0a0a, #0a0a0a) padding-box, linear-gradient(140deg, #ffb24a, rgba(255, 153, 28, 0.25) 40%, rgba(255, 153, 28, 0.1) 60%, #ff991c) border-box; box-shadow: var(--glow), 0 0 90px -20px rgba(255, 153, 28, 0.38); display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
 /* hero promo: dashboard -> flip -> kinetic text. Sized off the container so it scales with the block. */
 .promo { position: absolute; inset: 0; container-type: size; background: #0a0a0a; perspective: 1600px; overflow: hidden; }
@@ -176,6 +177,16 @@ a:hover { color: var(--orange); }
 .promo-sound { position: absolute; left: 1.2em; bottom: 1.2em; z-index: 3; min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: var(--bone); font: 700 11px var(--font-body), sans-serif; letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(8px); }
 .promo-sound:hover { background: rgba(255, 255, 255, 0.2); }
 .promo-sound:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+/* Play overlay: the dashboard sits dimmed underneath until the visitor presses play */
+.promo-play { position: absolute; inset: 0; z-index: 4; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; border: 0; padding: 0; cursor: pointer; color: var(--bone); background: radial-gradient(60% 60% at 50% 50%, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.7)); font-family: var(--font-body), sans-serif; }
+.promo-play-ic { display: flex; align-items: center; justify-content: center; width: clamp(72px, 15cqh, 112px); height: clamp(72px, 15cqh, 112px); border-radius: 50%; background: var(--orange); color: var(--black); box-shadow: 0 0 0 0 rgba(255, 153, 28, 0.6); animation: play-pulse 2.2s ease-out infinite; transition: transform 0.4s var(--ease-out); }
+.promo-play-ic svg { width: 40%; height: 40%; margin-left: 6%; }
+.promo-play:hover .promo-play-ic { transform: scale(1.08); }
+.promo-play:focus-visible { outline: none; }
+.promo-play:focus-visible .promo-play-ic { outline: 2px solid var(--white); outline-offset: 4px; }
+.promo-play-label { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
+.promo-play-label small { font-size: 11px; letter-spacing: 0.16em; color: var(--muted); }
+@keyframes play-pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 153, 28, 0.55); } 70% { box-shadow: 0 0 0 22px rgba(255, 153, 28, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 153, 28, 0); } }
 
 /* buttons */
 .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 28px; border-radius: var(--r-pill); background: var(--orange); color: var(--black); text-decoration: none; font-weight: 700; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; overflow: hidden; isolation: isolate; box-sizing: border-box; border: 0; cursor: pointer; font-family: inherit; }
@@ -443,5 +454,5 @@ select.inp { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.
   .up, .reveal, .stepin, .swap, .expand, .qa-a { animation: none; transform: none; opacity: 1; }
   .spin, .aurora > * { animation: none; }
   .track, .bar-fill, .sticky-cta { transition: none; }
-  .pd-toast, .pt-pop { animation: none; }
+  .pd-toast, .pt-pop, .promo-play-ic { animation: none; }
 }
