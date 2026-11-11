@@ -125,8 +125,11 @@ export function Wizard() {
       });
       if (!res.ok) throw new Error(String(res.status));
       // Conversion hook for GTM / Google Ads. No-op until a tag manager is installed.
-      const w = window as unknown as { dataLayer?: unknown[] };
+      const w = window as unknown as { dataLayer?: unknown[]; fbq?: (...args: unknown[]) => void };
       w.dataLayer?.push({ event: "lead_submitted", products: payload.products, trade: payload.trade });
+      // Meta Pixel conversion (pixel is loaded in app/layout.tsx). No contact details sent.
+      const products = [s.web && "website", s.ads && "ads"].filter(Boolean).join("+");
+      w.fbq?.("track", "Lead", { content_name: products, content_category: payload.trade });
       dispatch({ type: "set", patch: { sent: true, err: "" } });
     } catch {
       dispatch({ type: "set", patch: { err: "Something went wrong sending that. Please try again, or give us a call." } });
